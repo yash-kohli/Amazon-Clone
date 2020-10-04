@@ -3,8 +3,24 @@ import "./Subtotal.css";
 import CurrencyFormat from "react-currency-format";
 import { useDataLayerValue } from "./DataLayer";
 import { getBasketTotal } from "./reducer";
+import { useHistory } from "react-router-dom";
+
 function Subtotal() {
-  const [{ basket }, dispatch] = useDataLayerValue();
+  const [{ basket, user }, dispatch] = useDataLayerValue();
+  const history = useHistory();
+
+  //new change // proceed to pay
+  const check_proceedto_pay = (e) => {
+    if (user && basket.length > 0) {
+      history.push("/payment");
+    } else {
+      dispatch({
+        type: "SET_LOGIN_FLAG",
+        flag: true,
+      });
+      history.push("/login");
+    }
+  };
 
   return (
     <div className="subtotal">
@@ -26,7 +42,15 @@ function Subtotal() {
         thousandSeparator={true}
         prefix={"$"}
       />
-      <button>Proceed to Checkout</button>
+      <button
+        className={`subtotal__button ${
+          basket.length == 0 && "subtotal__disabled"
+        }`}
+        disabled={basket.length == 0}
+        onClick={check_proceedto_pay}
+      >
+        Proceed to Checkout
+      </button>
     </div>
   );
 }
