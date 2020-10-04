@@ -2,10 +2,13 @@ import { Link, useHistory } from "react-router-dom";
 import React, { useState, useEffect } from "react";
 import "./Login.css";
 import { auth } from "./firebase";
+import { useDataLayerValue } from "./DataLayer";
 function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const history = useHistory();
+
+  const [{ flag }, dispatch] = useDataLayerValue();
   const signIn = (e) => {
     e.preventDefault();
 
@@ -14,7 +17,16 @@ function Login() {
     auth
       .signInWithEmailAndPassword(email, password)
       .then((auth) => {
-        history.push("/");
+        //new change with if condition
+        if (flag) {
+          dispatch({
+            type: "SET_LOGIN_FLAG",
+            flag: false,
+          });
+          history.push("/payment");
+        } else {
+          history.push("/");
+        }
       })
       .catch((error) => alert(error.message));
   };
