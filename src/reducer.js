@@ -1,6 +1,7 @@
 export const initialState = {
   basket: [],
   user: null,
+  flag: false,
 };
 
 // Selector || reduce maps through basket  reduce(function(total,currval,index,arr),initialvalue)
@@ -32,6 +33,11 @@ const reducer = (state, action) => {
       return {
         ...state,
         user: action.user,
+      };
+    case "SET_LOGIN_FLAG":
+      return {
+        ...state,
+        flag: action.flag,
       };
     default:
       return state;
